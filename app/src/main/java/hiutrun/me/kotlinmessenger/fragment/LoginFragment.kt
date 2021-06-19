@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import hiutrun.me.kotlinmessenger.MainActivity
 import hiutrun.me.kotlinmessenger.R
 import hiutrun.me.kotlinmessenger.databinding.FragmentLoginBinding
+import hiutrun.me.kotlinmessenger.viewmodel.LoginViewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     lateinit var binding: FragmentLoginBinding
+    lateinit var loginViewModel: LoginViewModel
 
     companion object {
         @JvmStatic
@@ -23,12 +26,19 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loginViewModel = (activity as MainActivity).loginViewModel
         binding = FragmentLoginBinding.bind(view)
         binding.btnSignIn.setOnClickListener {
             Toast.makeText(context,"Hello", Toast.LENGTH_LONG).show()
         }
         binding.tvRegister.setOnClickListener {
             replaceFragment(RegisterFragment.newInstance())
+        }
+        binding.btnSignIn.setOnClickListener {
+            val email = binding.edtEmail.text.trim().toString()
+            val password = binding.edtPassword.text.trim().toString()
+            if(email.isNotEmpty() && password.isNotEmpty())
+                loginViewModel.signInWithEmailAndPassword(email,password)
         }
     }
 
